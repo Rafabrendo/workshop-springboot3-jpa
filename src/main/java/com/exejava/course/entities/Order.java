@@ -2,7 +2,9 @@ package com.exejava.course.entities;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import com.exejava.course.entities.enums.OrderStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -13,6 +15,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -34,6 +37,9 @@ public class Order implements Serializable {
 	@ManyToOne //No order eu tenho uma associação muitosParaUm com o User, por isso a anotação
 	@JoinColumn(name = "client_id") //nome da chave estrangeira que vai ter no banco de dados
 	private User client;
+	
+	@OneToMany(mappedBy = "id.order") //no OrderItem tem-se o id, e o id por sua vez é que tem o order(pedido)
+	private Set<OrderItem> items = new HashSet<>();
 	
 	
 	public Order() {
@@ -80,6 +86,10 @@ public class Order implements Serializable {
 
 	public void setClient(User client) {
 		this.client = client;
+	}
+	
+	public Set<OrderItem> getItems(){
+		return items;
 	}
 
 	@Override
