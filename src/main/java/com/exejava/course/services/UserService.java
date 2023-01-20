@@ -13,6 +13,8 @@ import com.exejava.course.repositories.UserRepository;
 import com.exejava.course.resources.exceptions.DatabaseException;
 import com.exejava.course.services.exceptions.ResourceNotFoundException;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @Service //É uma classe de serviço então dei preferencia ao @Service .
 public class UserService {
 	
@@ -46,9 +48,13 @@ public class UserService {
 	}
 	
 	public User update(Long id, User obj) {
-		User entity = repository.getReferenceById(id);
-		updateDate(entity, obj);
-		return repository.save(entity);
+		try {
+			User entity = repository.getReferenceById(id);
+			updateDate(entity, obj);
+			return repository.save(entity);
+		}catch(EntityNotFoundException e) {
+			throw new ResourceNotFoundException(id);
+		}
 	}
 	
 	//Não vou atualizar o id e nem o password
