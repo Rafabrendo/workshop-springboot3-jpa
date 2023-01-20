@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.exejava.course.entities.User;
 import com.exejava.course.repositories.UserRepository;
+import com.exejava.course.services.exceptions.ResourceNotFoundException;
 
 @Service //É uma classe de serviço então dei preferencia ao @Service .
 public class UserService {
@@ -22,7 +23,8 @@ public class UserService {
 	
 	public User findById(Long id) {
 		Optional<User> obj = repository.findById(id);
-		return obj.get(); //Essa operação vai retornar o objeto desse tipo q estiver dentro do optional
+		//return obj.get(); //Essa operação vai retornar o objeto desse tipo q estiver dentro do optional
+		return obj.orElseThrow(() -> new ResourceNotFoundException(id)); 
 	}
 	
 	public User insert(User obj) {
